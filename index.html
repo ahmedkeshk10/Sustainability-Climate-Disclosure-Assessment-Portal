@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة تقييمات الاستدامة - الهيئة العامة للرقابة المالية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #e1f5fe 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Decorative background elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -20%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(33, 150, 243, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-placeholder {
+            width: 650px;
+            margin: 40px auto;
+            transition: all 0.3s ease;
+        }
+
+        .logo-placeholder img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .logo-placeholder:hover {
+            border-color: #2E7D32;
+            transform: scale(1.05);
+        }
+
+        .main-title {
+            font-size: 42px;
+            font-weight: bold;
+            color: #2E7D32;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-title-english {
+            font-size: 24px;
+            color: #1976D2;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .subtitle-english {
+            font-size: 16px;
+            color: #777;
+        }
+
+        /* Main Content Area */
+        .assessment-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        /* Assessment Cards */
+        .assessment-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .assessment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(76, 175, 80, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .assessment-card:hover::before {
+            opacity: 1;
+        }
+
+        .assessment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+            border-color: #4CAF50;
+        }
+
+        .assessment-card.esg {
+            border-top: 5px solid #4CAF50;
+        }
+
+        .assessment-card.tcfd {
+            border-top: 5px solid #2196F3;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .icon-container {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            transition: transform 0.4s ease;
+        }
+
+        .assessment-card:hover .icon-container {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        .esg .icon-container {
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+            box-shadow: 0 8px 24px rgba(76, 175, 80, 0.3);
+        }
+
+        .tcfd .icon-container {
+            background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%);
+            box-shadow: 0 8px 24px rgba(33, 150, 243, 0.3);
+        }
+
+        .card-title-ar {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .esg .card-title-ar {
+            color: #2E7D32;
+        }
+
+        .tcfd .card-title-ar {
+            color: #1976D2;
+        }
+
+        .card-title-en {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .card-description {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card-button {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .tcfd .card-button {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .card-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .tcfd .card-button:hover {
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.4s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #f44336;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #d32f2f;
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #4CAF50;
+        }
+
+        .modal-header.tcfd-modal {
+            border-bottom-color: #2196F3;
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .modal-header.esg-modal .modal-icon {
+            background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+        }
+
+        .modal-header.tcfd-modal .modal-icon {
+            background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%);
+        }
+
+        .modal-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .modal-header.esg-modal .modal-title {
+            color: #2E7D32;
+        }
+
+        .modal-header.tcfd-modal .modal-title {
+            color: #1976D2;
+        }
+
+        .modal-subtitle {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .modal-body {
+            text-align: right;
+        }
+
+        .detail-item {
+            background: #f5f5f5;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border-right: 4px solid #4CAF50;
+            transition: all 0.3s ease;
+        }
+
+        .modal-header.tcfd-modal~.modal-body .detail-item {
+            border-right-color: #2196F3;
+        }
+
+        .detail-item:hover {
+            background: #e8f5e9;
+            transform: translateX(-5px);
+        }
+
+        .modal-header.tcfd-modal~.modal-body .detail-item:hover {
+            background: #e3f2fd;
+        }
+
+        .detail-item p {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            color: #555;
+        }
+
+        .link {
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 32px;
+            }
+
+            .main-title-english {
+                font-size: 20px;
+            }
+
+            .assessment-container {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 30px 20px;
+            }
+
+            .logo-placeholder {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="logo-placeholder">
+                <img src="./Assests/لوجو الهيئة.png" alt="Logo">
+            </div>
+            <h1 class="main-title">بوابة تقييمات الاستدامة</h1>
+            <p class="main-title-english">Sustainability Assessment Portal</p>
+            <h2 class="subtitle">الهيئة العامة للرقابة المالية</h2>
+            <p class="subtitle-english">Egyptian Financial Regulatory Authority</p>
+        </header>
+
+        <!-- Assessment Cards -->
+        <div class="assessment-container">
+            <!-- ESG Assessment Card -->
+            <div class="assessment-card esg">
+                <div class="card-content" onclick="openModal('esg')">
+                    <div class="icon-container">
+                        🌱
+                    </div>
+                    <h3 class="card-title-ar">تقييم ESG</h3>
+                    <p class="card-title-en">ESG Assessment</p>
+                    <p class="card-description">
+                        تقييم الأداء البيئي والاجتماعي والحوكمة
+                    </p>
+                    <p class="card-description" style="font-size: 14px; color: #777;">
+                        Environmental, Social, and Governance Performance Rating
+                    </p>
+                </div>
+                <a class="link" href="./Pages/companies.html">
+                    <button class="card-button">معرفة المزيد</button>
+                </a>
+            </div>
+
+            <!-- TCFD Assessment Card -->
+            <div class="assessment-card tcfd">
+                <div class="card-content" onclick="openModal('tcfd')">
+                    <div class="icon-container">
+                        🌍
+                    </div>
+                    <h3 class="card-title-ar">تقييم TCFD</h3>
+                    <p class="card-title-en">TCFD Assessment</p>
+                    <p class="card-description">
+                        الإفصاح عن المخاطر المالية المرتبطة بالمناخ
+                    </p>
+                    <p class="card-description" style="font-size: 14px; color: #777;">
+                        Task Force on Climate-related Financial Disclosures
+                    </p>
+                </div>
+                <a class="link" href="./Pages/dashboard.html">
+                    <button class="card-button">معرفة المزيد</button>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p><strong>الهيئة العامة للرقابة المالية - Egyptian Financial Regulatory Authority</strong></p>
+            <p>تقييمات الاستدامة والإفصاح المناخي | Sustainability &amp; Climate Disclosure Assessments</p>
+        </footer>
+    </div>
+
+    <!-- ESG Modal -->
+    <div id="esgModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('esg')">&times;</button>
+            <div class="modal-header esg-modal">
+                <div class="modal-icon">🌱</div>
+                <h2 class="modal-title">تقييم ESG</h2>
+                <p class="modal-subtitle">ESG Assessment - Environmental, Social, and Governance</p>
+            </div>
+            <div class="modal-body">
+                <div class="detail-item">
+                    <p><strong>🌿 تقييم الأداء البيئي:</strong> إدارة الموارد، الانبعاثات، الطاقة المتجددة</p>
+                </div>
+                <div class="detail-item">
+                    <p><strong>👥 تقييم الأداء الاجتماعي:</strong> حقوق العاملين، المسؤولية المجتمعية، التنوع</p>
+                </div>
+                <div class="detail-item">
+                    <p><strong>⚖️ تقييم الحوكمة:</strong> الشفافية، الإفصاح، هيكل مجلس الإدارة</p>
+                </div>
+                <div class="detail-item">
+                    <p><strong>📊 التصنيفات:</strong> ممتاز A+، جيد جداً A، جيد B، مقبول C، يحتاج تحسين D</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TCFD Modal -->
+    <div id="tcfdModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('tcfd')">&times;</button>
+            <div class="modal-header tcfd-modal">
+                <div class="modal-icon">🌍</div>
+                <h2 class="modal-title">تقييم TCFD</h2>
+                <p class="modal-subtitle">TCFD Assessment - Task Force on Climate-related Financial Disclosures</p>
+            </div>
+            <div class="modal-body">
+                <div class="detail-item">
+                    <p><strong>🏛️ الحوكمة:</strong> دور مجلس الإدارة في المخاطر المناخية</p>
+                </div>
+                <div class="detail-item">
+                    <p><strong>📈 الاستراتيجية:</strong> تأثير المخاطر والفرص المناخية</p>
+                </div>
+                <div class="detail-item">
+                    <p><strong>⚠️ إدارة المخاطر:</strong> تحديد وتقييم المخاطر المناخية</p>
+                </div>
+                <div class="detail-item">
+                    <p><strong>📊 المقاييس والأهداف:</strong> قياس الأداء المناخي والأهداف المستقبلية</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        function openModal(type) {
+            const modalId = type === 'esg' ? 'esgModal' : 'tcfdModal';
+            const modal = document.getElementById(modalId);
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(type) {
+            const modalId = type === 'esg' ? 'esgModal' : 'tcfdModal';
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    closeModal(this.id === 'esgModal' ? 'esg' : 'tcfd');
+                }
+            });
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.active').forEach(modal => {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
