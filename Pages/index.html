@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحليل الالتزام بإفصاحات الاستدامة والمناخ - ESG &amp; TCFD</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+/* Design System */
+:root {
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-cream-100: rgba(255, 255, 253, 1);
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-gray-300: rgba(167, 169, 169, 1);
+  --color-gray-400: rgba(119, 124, 124, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-brown-600: rgba(94, 82, 64, 1);
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: rgba(45, 166, 178, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-600: rgba(29, 116, 128, 1);
+  --color-teal-700: rgba(26, 104, 115, 1);
+  --color-teal-800: rgba(41, 150, 161, 1);
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1);
+  --color-orange-400: rgba(230, 129, 97, 1);
+  --color-orange-500: rgba(168, 75, 47, 1);
+
+  --color-brown-600-rgb: 94, 82, 64;
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-slate-900-rgb: 19, 52, 59;
+  --color-slate-500-rgb: 98, 108, 113;
+
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+
+  --font-family-base: "Tahoma", "Arial", "Segoe UI", "FKGroteskNeue", sans-serif;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 600;
+
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+
+  --radius-base: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --duration-normal: 250ms;
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --color-addressed: #005D87;
+  --color-compliant: #8DCA4D;
+  --color-title: #002060;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--color-charcoal-700);
+    --color-surface: var(--color-charcoal-800);
+    --color-text: var(--color-gray-200);
+    --color-text-secondary: rgba(167, 169, 169, 0.7);
+    --color-primary: var(--color-teal-300);
+    --color-primary-hover: var(--color-teal-400);
+    --color-border: rgba(119, 124, 124, 0.3);
+    --color-card-border: rgba(119, 124, 124, 0.2);
+  }
+}
+
+@font-face {
+  font-family: 'FKGroteskNeue';
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(135deg, 
+    rgba(141, 202, 77, 0.03) 0%, 
+    rgba(0, 93, 135, 0.03) 50%,
+    rgba(141, 202, 77, 0.03) 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-24);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-32);
+  padding-bottom: var(--space-24);
+  border-bottom: 2px solid var(--color-border);
+  animation: fadeIn 0.6s ease;
+}
+
+.header h1 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-title);
+  margin-bottom: var(--space-12);
+}
+
+.header p {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-16);
+  margin-bottom: var(--space-32);
+}
+
+.summary-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-20);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-normal) var(--ease-standard);
+  animation: fadeInUp 0.5s ease;
+  border-top: 4px solid var(--color-addressed);
+}
+
+.summary-card:nth-child(2),
+.summary-card:nth-child(4) {
+  border-top-color: var(--color-compliant);
+}
+
+.summary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.summary-card .value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--space-8);
+}
+
+.summary-card .label {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-8);
+}
+
+.summary-card .rate {
+  font-size: var(--font-size-sm);
+  color: var(--color-compliant);
+  font-weight: var(--font-weight-semibold);
+}
+
+.section {
+  margin-bottom: var(--space-32);
+  animation: fadeInUp 0.6s ease;
+}
+
+.section-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-title);
+  margin-bottom: var(--space-24);
+  padding-right: var(--space-16);
+  border-right: 4px solid var(--color-compliant);
+}
+
+.chart-container {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-24);
+}
+
+.chart-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-20);
+  text-align: center;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 400px;
+  width: 100%;
+}
+
+.subsection-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-addressed);
+  margin-top: var(--space-32);
+  margin-bottom: var(--space-20);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .chart-wrapper {
+    height: 300px;
+  }
+  
+  .section-title {
+    font-size: var(--font-size-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--space-16);
+  }
+  
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>لوحة تحليل الالتزام بإفصاحات الاستدامة والمناخ</h1>
+            <p>تحليل شامل لالتزام الشركات بمعايير ESG &amp; TCFD</p>
+        </header>
+
+        <!-- Overall Summary Cards -->
+        <div class="summary-cards">
+            <div class="summary-card">
+                <div class="value">489</div>
+                <div class="label">عدد الشركات المخاطبة بـ ESG</div>
+            </div>
+            <div class="summary-card">
+                <div class="value">373</div>
+                <div class="label">عدد الشركات الملتزمة بـ ESG</div>
+                <div class="rate">معدل الالتزام: 76%</div>
+            </div>
+            <div class="summary-card">
+                <div class="value">236</div>
+                <div class="label">عدد الشركات المخاطبة بـ TCFD</div>
+            </div>
+            <div class="summary-card">
+                <div class="value">167</div>
+                <div class="label">عدد الشركات الملتزمة بـ TCFD</div>
+                <div class="rate">معدل الالتزام: 70%</div>
+            </div>
+        </div>
+
+        <!-- Section 1: Overall Analysis -->
+        <section class="section">
+            <h2 class="section-title">التحليل العام لإجمالي الشركات</h2>
+            <div class="chart-container">
+                <h3 class="chart-title">التحليل العام لالتزام الشركات بإفصاحات الاستدامة والمناخ (ESG &amp; TCFD)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="overallChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Non-Listed Companies -->
+        <section class="section">
+            <h2 class="section-title">الشركات غير المقيدة بالبورصة</h2>
+            
+            <div class="chart-container">
+                <h3 class="chart-title">أداء الشركات غير المقيدة بتطبيق إفصاحات الاستدامة والمناخ (ESG &amp; TCFD)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="nonListedOverallChart"></canvas>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">معدلات التزام الشركات غير المقيدة بإفصاحات الاستدامة (ESG) حسب القطاع المالي</h3>
+            <div class="chart-container">
+                <div class="chart-wrapper">
+                    <canvas id="nonListedESGChart"></canvas>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">معدلات التزام الشركات غير المقيدة بإفصاحات المناخ (TCFD) حسب القطاع المالي</h3>
+            <div class="chart-container">
+                <div class="chart-wrapper">
+                    <canvas id="nonListedTCFDChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Listed Companies -->
+        <section class="section">
+            <h2 class="section-title">الشركات المقيدة بالبورصة</h2>
+            <div class="chart-container">
+                <h3 class="chart-title">أداء الشركات المقيدة بتطبيق إفصاحات الاستدامة والمناخ (ESG &amp; TCFD)</h3>
+                <div class="chart-wrapper">
+                    <canvas id="listedOverallChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
